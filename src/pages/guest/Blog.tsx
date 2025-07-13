@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useApiRequest } from '../../hooks/useApiRequest';
 import { motion } from 'framer-motion';
 import { 
   CalendarIcon, 
@@ -11,104 +13,52 @@ import {
 } from 'lucide-react';
 
 interface BlogPost {
-  id: string;
+  _id: string;
   title: string;
-  excerpt: string;
-  content: string;
+  imageUrl: string;
   author: string;
-  date: string;
-  readTime: string;
-  category: string;
-  tags: string[];
-  image: string;
-  featured: boolean;
+  description: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { get } = useApiRequest();
 
-  // Sample blog posts
-  const blogPosts: BlogPost[] = [
-    {
-      id: '1',
-      title: 'The Future of Sustainable Waste Management in Sri Lanka',
-      excerpt: 'Explore innovative approaches to waste management that are transforming how we handle waste in Sri Lankan communities.',
-      content: 'Full content here...',
-      author: 'Dr. Priya Fernando',
-      date: '2024-07-10',
-      readTime: '5 min read',
-      category: 'Sustainability',
-      tags: ['waste management', 'sustainability', 'environment'],
-      image: '/api/placeholder/600/400',
-      featured: true
-    },
-    {
-      id: '2',
-      title: '10 Simple Ways to Reduce Household Waste',
-      excerpt: 'Practical tips and tricks that every family can implement to significantly reduce their environmental footprint.',
-      content: 'Full content here...',
-      author: 'Rajesh Kumar',
-      date: '2024-07-08',
-      readTime: '3 min read',
-      category: 'Tips & Guides',
-      tags: ['household', 'tips', 'reduce waste'],
-      image: '/api/placeholder/600/400',
-      featured: false
-    },
-    {
-      id: '3',
-      title: 'EcoClean Success Story: Transforming Colombo Communities',
-      excerpt: 'Read about how our services have helped local communities achieve their environmental goals and create cleaner neighborhoods.',
-      content: 'Full content here...',
-      author: 'Sarah Perera',
-      date: '2024-07-05',
-      readTime: '4 min read',
-      category: 'Success Stories',
-      tags: ['community', 'success', 'colombo'],
-      image: '/api/placeholder/600/400',
-      featured: false
-    },
-    {
-      id: '4',
-      title: 'Understanding Different Types of Recycling in Sri Lanka',
-      excerpt: 'A comprehensive guide to recycling practices, regulations, and opportunities available in Sri Lanka.',
-      content: 'Full content here...',
-      author: 'Prof. Kamal Dissanayake',
-      date: '2024-07-03',
-      readTime: '6 min read',
-      category: 'Education',
-      tags: ['recycling', 'education', 'guidelines'],
-      image: '/api/placeholder/600/400',
-      featured: false
-    },
-    {
-      id: '5',
-      title: 'Green Technology: Smart Solutions for Waste Collection',
-      excerpt: 'Discover how technology is revolutionizing waste collection and making it more efficient and environmentally friendly.',
-      content: 'Full content here...',
-      author: 'Tech Team',
-      date: '2024-07-01',
-      readTime: '7 min read',
-      category: 'Technology',
-      tags: ['technology', 'innovation', 'smart solutions'],
-      image: '/api/placeholder/600/400',
-      featured: true
-    }
-  ];
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await get('/api/get-all-blogs');
+        if (res.success && Array.isArray(res.data)) {
+          setBlogPosts(res.data);
+        } else {
+          setError('Failed to fetch blogs');
+        }
+      } catch (err) {
+        setError('Failed to fetch blogs');
+      }
+      setLoading(false);
+    };
+    fetchBlogs();
+  }, []);
 
-  const categories = ['All', 'Sustainability', 'Tips & Guides', 'Success Stories', 'Education', 'Technology'];
+  // You can update categories based on your backend if needed
+  const categories = ['All'];
 
-  // Filter posts based on category and search
+  // Filter posts based on search
   const filteredPosts = blogPosts.filter(post => {
-    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
+      post.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
   });
-
-  const featuredPosts = blogPosts.filter(post => post.featured);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -151,58 +101,15 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Featured Posts */}
-      {featuredPosts.length > 0 && (
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {featuredPosts.map((post, index) => (
-                <motion.article
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="h-48 bg-gradient-to-r from-green-400 to-blue-500"></div>
-                  <div className="p-6">
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                        {post.category}
-                      </span>
-                      <div className="flex items-center space-x-1">
-                        <CalendarIcon className="h-4 w-4" />
-                        <span>{formatDate(post.date)}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <ClockIcon className="h-4 w-4" />
-                        <span>{post.readTime}</span>
-                      </div>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-green-600 transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <UserIcon className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">{post.author}</span>
-                      </div>
-                      <button className="flex items-center space-x-1 text-green-600 hover:text-green-700 font-medium">
-                        <span>Read More</span>
-                        <ArrowRightIcon className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.article>
-              ))}
-            </div>
-          </div>
-        </section>
+      {/* Loading/Error State */}
+      {loading && (
+        <div className="py-16 text-center text-lg text-gray-500">Loading blogs...</div>
+      )}
+      {error && (
+        <div className="py-16 text-center text-lg text-red-500">{error}</div>
       )}
 
-      {/* Category Filter */}
+      {/* Category Filter (if categories are dynamic, update accordingly) */}
       <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-2">
@@ -238,50 +145,38 @@ const Blog = () => {
           {filteredPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPosts.map((post, index) => (
-                <motion.article
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
-                >
-                  <div className="h-48 bg-gradient-to-r from-green-400 to-blue-500"></div>
-                  <div className="p-6">
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                        {post.category}
-                      </span>
-                      <div className="flex items-center space-x-1">
-                        <CalendarIcon className="h-4 w-4" />
-                        <span>{formatDate(post.date)}</span>
+                <Link to={`/blog/${post._id}`} key={post._id} className="block">
+                  <motion.article
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
+                  >
+                    <div className="h-48 bg-gradient-to-r from-green-400 to-blue-500">
+                      {post.imageUrl && (
+                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover rounded-t-xl" />
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
+                        <div className="flex items-center space-x-1">
+                          <CalendarIcon className="h-4 w-4" />
+                          <span>{formatDate(post.createdAt)}</span>
+                        </div>
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-600 mb-4">{post.description}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <UserIcon className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm text-gray-600">{post.author}</span>
+                        </div>
                       </div>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <UserIcon className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">{post.author}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <ClockIcon className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">{post.readTime}</span>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <div className="flex flex-wrap gap-2">
-                        {post.tags.slice(0, 2).map((tag) => (
-                          <span key={tag} className="flex items-center space-x-1 text-xs text-gray-500">
-                            <TagIcon className="h-3 w-3" />
-                            <span>{tag}</span>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.article>
+                  </motion.article>
+                </Link>
               ))}
             </div>
           ) : (

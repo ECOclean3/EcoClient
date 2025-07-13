@@ -9,6 +9,7 @@ import About from './pages/guest/About';
 import Services from './pages/guest/Services';
 import Blog from './pages/guest/Blog';
 import GuestInquiry from './pages/guest/GuestInquiry';
+import BlogDetail from './pages/guest/BlogDetail';
 // Customer Pages
 import CustomerLayout from './layouts/CustomerLayout';
 import Dashboard from './pages/customer/Dashboard';
@@ -35,6 +36,7 @@ export function App() {
             <Route path="about" element={<About />} />
             <Route path="services" element={<Services />} />
             <Route path="blog" element={<Blog />} />
+            <Route path="blog/:id" element={<BlogDetail />} />
           </Route>
 
           {/* Guest Inquiry Route */}
