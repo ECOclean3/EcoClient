@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
+import ChatbotWidget from './components/ChatbotWidget';
 // Guest Pages
 import GuestLayout from './layouts/GuestLayout';
 import Home from './pages/guest/Home';
@@ -28,6 +29,7 @@ export function App() {
 
   return (
     <Router>
+      <ChatbotWidget />
       <AnimatePresence mode="wait">
         <Routes>
           {/* Guest Routes - Available to everyone */}
