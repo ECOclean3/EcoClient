@@ -118,8 +118,7 @@ const Dashboard = () => {
           fetchServiceBookings(),
           fetchPickupRequests(),
           fetchInquiries(),
-          fetchNotifications(),
-          fetchPayments()
+          fetchNotifications()
         ]);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -182,7 +181,7 @@ const Dashboard = () => {
   const fetchInquiries = async () => {
     try {
       const token = await getToken();
-      const response = await fetch(`${backendUrl}/api/user/inquiries`, {
+      const response = await fetch(`${backendUrl}/api/user/get-all-inquiries`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -226,28 +225,6 @@ const Dashboard = () => {
       }
     } catch (err) {
       console.error('Error fetching notifications:', err);
-    }
-  };
-
-  // Fetch real payments using existing API
-  const fetchPayments = async () => {
-    try {
-      const token = await getToken();
-      const response = await fetch(`${backendUrl}/api/user/payments`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const result = await response.json();
-      if (response.ok && result.success) {
-        setPayments(result.payments || []);
-      } else {
-        console.error('Failed to fetch payments:', result.message);
-      }
-    } catch (err) {
-      console.error('Error fetching payments:', err);
     }
   };
 
@@ -322,48 +299,33 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Total Inquiries</p>
-              <p className="text-2xl font-bold text-gray-900">{userStats.totalInquiries}</p>
-            </div>
-            <div className="text-3xl">💬</div>
+      {/* Quick Stats - Responsive Flex/Grid */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-6 md:grid md:grid-cols-3 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
+        {/* Total Inquiries */}
+        <div className="flex-1 bg-white p-6 rounded-xl shadow-sm border flex items-center justify-between min-w-[180px]">
+          <div>
+            <p className="text-sm text-gray-600">Total Inquiries</p>
+            <p className="text-2xl font-bold text-gray-900">{userStats.totalInquiries}</p>
           </div>
+          <div className="text-3xl">💬</div>
         </div>
 
-        {/* Active Services card removed as requested */}
-
-        <div className="bg-white p-6 rounded-xl shadow-sm border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Pending Service Bookings</p>
-              <p className="text-2xl font-bold text-gray-900">{userStats.pendingServiceBookings}</p>
-            </div>
-            <div className="text-3xl">⏳</div>
+        {/* Pending Service Bookings */}
+        <div className="flex-1 bg-white p-6 rounded-xl shadow-sm border flex items-center justify-between min-w-[180px]">
+          <div>
+            <p className="text-sm text-gray-600">Pending Service Bookings</p>
+            <p className="text-2xl font-bold text-gray-900">{userStats.pendingServiceBookings}</p>
           </div>
+          <div className="text-3xl">⏳</div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Pending Pickups</p>
-              <p className="text-2xl font-bold text-gray-900">{userStats.pendingPickups}</p>
-            </div>
-            <div className="text-3xl">🚛</div>
+        {/* Pending Pickups */}
+        <div className="flex-1 bg-white p-6 rounded-xl shadow-sm border flex items-center justify-between min-w-[180px]">
+          <div>
+            <p className="text-sm text-gray-600">Pending Pickups</p>
+            <p className="text-2xl font-bold text-gray-900">{userStats.pendingPickups}</p>
           </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl shadow-sm border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Total Spent</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(userStats.totalSpent)}</p>
-            </div>
-            <div className="text-3xl">💳</div>
-          </div>
+          <div className="text-3xl">🚛</div>
         </div>
       </div>
 
