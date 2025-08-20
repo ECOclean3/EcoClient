@@ -16,7 +16,7 @@ import CustomerLayout from './layouts/CustomerLayout';
 import Dashboard from './pages/customer/Dashboard';
 import RequestPickupDashboard from './pages/customer/RequestPickupDashboard';
 import ServiceBookingDashboard from './pages/customer/ServiceBookingDashboard';
-import RequestPickup from './pages/customer/RequestPickup';
+import RequestPickup from './pages/guest/RequestPickup';
 import PickupHistory from './pages/customer/PickupHistory';
 import RewardPoints from './pages/customer/RewardPoints';
 import Inquiry from './pages/customer/Inquiry';
