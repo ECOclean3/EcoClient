@@ -169,7 +169,7 @@ const GuestNavbar = () => {
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-2 group">
                 <PhoneIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                <span className="hover:text-green-200 transition-colors">+94 11 234 5678</span>
+                <span className="hover:text-green-200 transition-colors">1(941)888 9643</span>
               </div>
               <div className="flex items-center space-x-2 group">
                 <MailIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />

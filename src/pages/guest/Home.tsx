@@ -214,15 +214,7 @@ const Home = () => {
                     </motion.button>
                   </SignInButton>
                 )}
-                
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group flex items-center space-x-2 bg-white/80 backdrop-blur-sm text-gray-800 font-semibold px-8 py-4 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <PlayIcon className="h-5 w-5 text-green-600" />
-                  <span>Watch Demo</span>
-                </motion.button>
+              
               </motion.div>
 
               {/* Trust Indicators */}
@@ -782,7 +774,7 @@ const Home = () => {
                 className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-semibold px-10 py-5 rounded-2xl hover:bg-white/20 transition-all duration-300 text-lg flex items-center space-x-3"
               >
                 <PhoneCallIcon className="h-6 w-6" />
-                <span>Call +94 11 234 5678</span>
+                <span>Call +1(941)888 9643</span>
               </motion.button>
             </div>
 

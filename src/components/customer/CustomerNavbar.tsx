@@ -194,7 +194,7 @@ const CustomerNavbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-2 group">
-                <span className="hover:text-green-200 transition-colors">+94 11 234 5678</span>
+                <span className="hover:text-green-200 transition-colors">1(941)888 9643</span>
               </div>
               <div className="flex items-center space-x-2 group">
                 <span className="hover:text-green-200 transition-colors">info@ecoclean.lk</span>

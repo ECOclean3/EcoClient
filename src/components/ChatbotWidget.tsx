@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Bot, X } from 'lucide-react';
 
-const BOT_NAME = 'EcoClean AI';
-const API_URL = 'http://127.0.0.1:5002/';
 
-const ChatbotWidget = () => {
+const ChatbotWidget: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   return (
